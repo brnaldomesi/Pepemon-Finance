@@ -35,6 +35,8 @@ contract Deck is ERC721, Ownable {
     }
 
     function addBattleCard(uint256 _deckId, uint256 _battleCardId) public {
+        require(Pepemon(battleCardAddress).ownerOf(_battleCardId) == msg.sender, "Not your card");
+
         Pepemon(battleCardAddress).transferFrom(msg.sender, address(this), _battleCardId);
 
         if (decks[_deckId].battleCardId != 0) {
@@ -44,10 +46,14 @@ contract Deck is ERC721, Ownable {
         decks[_deckId].battleCardId = _battleCardId;
     }
 
+    function addActionCards(uint256 _deckId, uint256[] memory _actionCards) public {
+        for (uint256 i = 0; i < _actionCards.length; i++) {
+
+        }
+    }
+
     modifier sendersDeck(uint256 _deckId) {
         require(msg.sender == ownerOf(_deckId));
         _;
     }
-
-
 }

@@ -19,6 +19,7 @@ describe('Deck', () => {
 
     await deck.setBattleCardAddress(battleCard.address);
 
+    await battleCard.mock.ownerOf.withArgs(1).returns(alice.address);
   });
 
   it('Should allow a deck to be created', async () => {
@@ -50,11 +51,20 @@ describe('Deck', () => {
       await battleCard.mock.transferFrom.withArgs(alice.address, deck.address, 1).returns();
       await battleCard.mock.transferFrom.withArgs(alice.address, deck.address, 2).returns();
 
+      await battleCard.mock.ownerOf.withArgs(2).returns(alice.address);
+
       // Mock withdrawal transfer
       await battleCard.mock.transferFrom.withArgs(deck.address, alice.address, 1).returns();
 
       await deck.addBattleCard(1, 1);
       await deck.addBattleCard(1, 2);
+    });
+    describe('Permissions', async () => {
+      it('Should prevent adding cards which you don\'t own', async () => {
+        await battleCard.mock.transferFrom.withArgs(alice.address, deck.address, 1).returns();
+
+        await expect(bobSignedDeck.addBattleCard(1, 1)).to.be.revertedWith("revert Not your card");
+      });
     });
   });
 
