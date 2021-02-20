@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for contracts/schemes/BaseScheme.sol</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../index.html">all files</a> / <a href="index.html">contracts/schemes/</a> BaseScheme.sol
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>0/16</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>0/2</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>0/13</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>0/17</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">pragma solidity ^0.6.0;
+&nbsp;
+import "../utils/Random.sol";
+import "../Cash.sol";
+import "../player/Treasury.sol";
+import "../player/Player.sol";
+&nbsp;
+abstract contract BaseScheme {
+    uint256 constant MAX_UINT = 2**256 - 1;
+&nbsp;
+    event SchemeStarted(string name, address who, uint256 when);
+    event SchemeCompleted(string name, address who, uint256 when);
+&nbsp;
+    uint256 public duration;
+    uint256 internal experience;
+    uint256 internal successChance;
+&nbsp;
+    address internal randomNumberGenerator;
+    address internal cashContract;
+    address internal treasuryAddress;
+    address internal playerStatsAddress;
+&nbsp;
+<span class="fstat-no" title="function not covered" >    constructor(</span>
+        uint256 _duration,
+        uint256 _experience,
+        uint256 _successChance
+    ) public {
+<span class="cstat-no" title="statement not covered" >        duration = _duration</span>;
+<span class="cstat-no" title="statement not covered" >        experience = _experience</span>;
+<span class="cstat-no" title="statement not covered" >        successChance = _successChance</span>;
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    function setRandomNumberGenerator(address _randomNumberGenerator) public {</span>
+<span class="cstat-no" title="statement not covered" >        randomNumberGenerator = _randomNumberGenerator</span>;
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    function setCashContract(address _cashContractAddress) public {</span>
+<span class="cstat-no" title="statement not covered" >        cashContract = _cashContractAddress</span>;
+<span class="cstat-no" title="statement not covered" >        Cash(cashContract).approve(treasuryAddress, MAX_UINT)</span>;
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    function setTreasury(address _treasuryAddress) public {</span>
+<span class="cstat-no" title="statement not covered" >        treasuryAddress = _treasuryAddress</span>;
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    function setPlayerStats(address _playerStatsAddress) public {</span>
+<span class="cstat-no" title="statement not covered" >        playerStatsAddress = _playerStatsAddress</span>;
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    function start(address _who) public virtual {</span>
+<span class="cstat-no" title="statement not covered" >        emit SchemeStarted(getSchemeName(), _who, block.timestamp);</span>
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    function complete(address _who) public virtual onlySchemeManager {}</span>
+&nbsp;
+<span class="fstat-no" title="function not covered" >    function getSchemeName() internal pure virtual returns (string memory) {</span>
+<span class="cstat-no" title="statement not covered" >        return "";</span>
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    function getSuccessGauge() internal virtual returns (uint256 _successGauge) {</span>
+<span class="cstat-no" title="statement not covered" >        return Random(randomNumberGenerator).random(100);</span>
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    function increaseStats(</span>
+        address _who,
+        uint256 _chadary,
+        uint256 _degeneracy,
+        uint256 _fomostition,
+        uint256 _rugpullable
+    ) internal {
+<span class="cstat-no" title="statement not covered" >        PlayerStats(playerStatsAddress).increaseFarmingStats(_who, _chadary, _degeneracy, _fomostition, _rugpullable)</span>;
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    function mint(address _who, uint256 _amount) internal {</span>
+<span class="cstat-no" title="statement not covered" >        Cash(cashContract).mint(address(this), _amount)</span>;
+<span class="cstat-no" title="statement not covered" >        Treasury(treasuryAddress).depositCashTo(_who, _amount)</span>;
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    function getScheme() public view returns (uint256 _duration, string memory _name) {</span>
+<span class="cstat-no" title="statement not covered" >        return (duration, getSchemeName());</span>
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    modifier onlySchemeManager() {</span>
+<span class="cstat-no" title="statement not covered" >        require(true)</span>;
+        _;
+    }
+}
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Dec 31 2020 11:24:36 GMT+0000 (Greenwich Mean Time)
+</div>
+</div>
+<script src="../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../sorter.js"></script>
+</body>
+</html>

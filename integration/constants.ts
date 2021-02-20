@@ -1,0 +1,2 @@
+export const DAI_OWNER = '0xf977814e90da44bfa03b6295a0616a897441acec';
+export const ME = '0xdf5Ae39F1623b90Ad25A92BF1Cd52Ca331e39a1C';

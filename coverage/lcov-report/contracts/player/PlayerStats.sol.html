@@ -1,0 +1,617 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for contracts/player/PlayerStats.sol</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../index.html">all files</a> / <a href="index.html">contracts/player/</a> PlayerStats.sol
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>0/27</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>0/8</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>0/12</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>0/31</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">pragma solidity ^0.6.0;
+&nbsp;
+import "@openzeppelin/contracts/access/AccessControl.sol";
+import "@openzeppelin/contracts/math/SafeMath.sol";
+&nbsp;
+//https://thatsallgames.com/2019/02/05/the-anatomy-of-rpgs-part-1-stats/
+contract PlayerStats is AccessControl {
+    using SafeMath for uint256;
+&nbsp;
+    event PlayerBattleStatsUpdated (
+        address who,
+        uint256 strengthIncrease,
+        uint256 dexterityIncrease,
+        uint256 defenceIncrease,
+        uint256 constitutionIncrease
+    );
+&nbsp;
+    event PlayerFarmingStatsUpdated (
+        address who,
+        uint256 degeneracyIncrease,
+        uint256 chadaryIncrease,
+        uint256 fomostitionIncrease,
+        uint256 rugpullableIncrease
+    );
+&nbsp;
+    struct Stats {
+        uint256 level;
+        uint256 experience;
+        uint256 baseHealth;
+        uint256 currentHealth; // todo need to work out regeneration rate
+        bool isPlayer;
+        BattleStats battleStats;
+        FarmingStats farmingStats;
+    }
+&nbsp;
+    struct BattleStats {
+        uint256 baseStrength; // attack
+        uint256 baseDexterity; // speed
+        uint256 baseDefence; // defence
+        uint256 baseConstitution; // health
+    }
+&nbsp;
+    struct FarmingStats {
+        uint256 degeneracy; // Higher gains
+        uint256 chadary; // Chance to succeed
+        uint256 fomostition; // Higher losses
+        uint256 rugpullable; // Chance to fail
+    }
+&nbsp;
+    mapping(address =&gt; Stats) playerStats;
+    address public playerManager;
+&nbsp;
+    bytes32 public constant ADMIN = keccak256("ADMIN");
+    bytes32 public constant PLAYER_MANAGER = keccak256("PLAYER_MANAGER");
+&nbsp;
+<span class="fstat-no" title="function not covered" >    constructor() public {</span>
+<span class="cstat-no" title="statement not covered" >        _setupRole(ADMIN, msg.sender)</span>;
+<span class="cstat-no" title="statement not covered" >        _setRoleAdmin(PLAYER_MANAGER, ADMIN)</span>;
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    function setPlayerManager(address _playerManager) public onlyAdmin {</span>
+<span class="cstat-no" title="statement not covered" >        grantRole(PLAYER_MANAGER, _playerManager)</span>;
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    function createBasePlayer(address _who) public onlyNewPlayer(_who) onlyPlayerManager {</span>
+<span class="cstat-no" title="statement not covered" >        uint256 defaultBattleStats = 20 * 1 ether;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        BattleStats memory battleStats = BattleStats({</span>
+        baseStrength : defaultBattleStats,
+        baseDexterity : defaultBattleStats,
+        baseDefence : defaultBattleStats,
+        baseConstitution : defaultBattleStats
+        });
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        FarmingStats memory farmingStats = FarmingStats({degeneracy : 0, chadary : 0, fomostition : 0, rugpullable : 0});</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        playerStats[_who] = Stats({</span>
+        level : 1,
+        experience : 0,
+        baseHealth : 100,
+        currentHealth : 100,
+        battleStats : battleStats,
+        farmingStats : farmingStats,
+        isPlayer : true
+        });
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    function getPlayerStats(address _who)</span>
+    public
+    view
+    returns (
+        uint256 level,
+        uint256 experience,
+        uint256 baseHealth,
+        uint256 currentHealth,
+        bool isPlayer
+    )
+    {
+<span class="cstat-no" title="statement not covered" >        Stats memory stats = playerStats[_who];</span>
+<span class="cstat-no" title="statement not covered" >        return (stats.level, stats.experience, stats.baseHealth, stats.currentHealth, stats.isPlayer);</span>
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    function getPlayerBattleStats(address _who)</span>
+    public
+    view
+    returns (
+        uint256 baseStrength,
+        uint256 baseDexterity,
+        uint256 baseDefence,
+        uint256 baseConstitution
+    )
+    {
+<span class="cstat-no" title="statement not covered" >        BattleStats memory stats = playerStats[_who].battleStats;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        return (stats.baseStrength, stats.baseDexterity, stats.baseDefence, stats.baseConstitution);</span>
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    function getPlayerFarmingStats(address _who)</span>
+    public
+    view
+    returns (
+        uint256 _degeneracy,
+        uint256 _chadary,
+        uint256 _fomostition,
+        uint256 _rugpullable
+    )
+    {
+<span class="cstat-no" title="statement not covered" >        FarmingStats memory stats = playerStats[_who].farmingStats;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        return (stats.degeneracy, stats.chadary, stats.fomostition, stats.rugpullable);</span>
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    function increaseFarmingStats(</span>
+        address _who,
+        uint256 _chadary,
+        uint256 _degeneracy,
+        uint256 _fomostition,
+        uint256 _rugpullable
+    ) public onlyPlayerManager existingPlayer(_who) {
+<span class="cstat-no" title="statement not covered" >        emit PlayerFarmingStatsUpdated(_who, _chadary, _degeneracy, _fomostition, _rugpullable);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        playerStats[_who].farmingStats.chadary = playerStats[_who].farmingStats.chadary.add(_chadary)</span>;
+<span class="cstat-no" title="statement not covered" >        playerStats[_who].farmingStats.degeneracy = playerStats[_who].farmingStats.degeneracy.add(_degeneracy)</span>;
+<span class="cstat-no" title="statement not covered" >        playerStats[_who].farmingStats.fomostition = playerStats[_who].farmingStats.fomostition.add(_fomostition)</span>;
+<span class="cstat-no" title="statement not covered" >        playerStats[_who].farmingStats.rugpullable = playerStats[_who].farmingStats.rugpullable.add(_rugpullable)</span>;
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    function increaseBattleStats(</span>
+        address _who,
+        uint256 _strength,
+        uint256 _dexterity,
+        uint256 _defence,
+        uint256 _constitution
+    ) public onlyPlayerManager existingPlayer(_who) {
+<span class="cstat-no" title="statement not covered" >        emit PlayerBattleStatsUpdated(_who, _strength, _dexterity, _defence, _constitution);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        playerStats[_who].battleStats.baseStrength = playerStats[_who].battleStats.baseStrength.add(_strength)</span>;
+<span class="cstat-no" title="statement not covered" >        playerStats[_who].battleStats.baseDexterity = playerStats[_who].battleStats.baseDexterity.add(_dexterity)</span>;
+<span class="cstat-no" title="statement not covered" >        playerStats[_who].battleStats.baseDefence = playerStats[_who].battleStats.baseDefence.add(_defence)</span>;
+<span class="cstat-no" title="statement not covered" >        playerStats[_who].battleStats.baseConstitution = playerStats[_who].battleStats.baseConstitution.add(</span>
+            _constitution
+        );
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    modifier onlyNewPlayer(address _who) {</span>
+<span class="cstat-no" title="statement not covered" >        require(playerStats[_who].isPlayer == false, "Player already exists")</span>;
+        _;
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    modifier existingPlayer(address _who) {</span>
+<span class="cstat-no" title="statement not covered" >        require(playerStats[_who].isPlayer, "Player doesn't exist")</span>;
+        _;
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    modifier onlyPlayerManager() {</span>
+<span class="cstat-no" title="statement not covered" >        require(hasRole(PLAYER_MANAGER, msg.sender), "Not Player Manager")</span>;
+        _;
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    modifier onlyAdmin() {</span>
+<span class="cstat-no" title="statement not covered" >        require(hasRole(ADMIN, msg.sender), "Not Admin")</span>;
+        _;
+    }
+}
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Dec 31 2020 11:24:36 GMT+0000 (Greenwich Mean Time)
+</div>
+</div>
+<script src="../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../sorter.js"></script>
+</body>
+</html>

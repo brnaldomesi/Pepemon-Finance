@@ -1,0 +1,22 @@
+module.exports = {
+  semi: true,
+  singleQuote: true,
+  printWidth: 120,
+  tabWidth: 2,
+  useTabs: false,
+  trailingComma: 'es5',
+  bracketSpacing: true,
+  arrowParens: 'always',
+  overrides: [
+    {
+      files: '*.sol',
+      options: {
+        printWidth: 120,
+        tabWidth: 4,
+        singleQuote: false,
+        bracketSpacing: false,
+        explicitTypes: 'always',
+      },
+    },
+  ],
+};

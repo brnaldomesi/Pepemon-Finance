@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for contracts/Shop.sol</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">contracts/</a> Shop.sol
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>0/32</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>0/12</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>0/8</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>0/33</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">pragma solidity ^0.6.0;
+&nbsp;
+import "@openzeppelin/contracts/access/Ownable.sol";
+&nbsp;
+import "./item/ItemBase.sol";
+import "./player/Treasury.sol";
+&nbsp;
+contract Shop is Ownable {
+    using SafeMath for uint256;
+&nbsp;
+    event ItemAdded(address itemAddress, uint256 price, uint256 when);
+    event ItemUpdated(address itemAddress, uint256 price, uint256 when);
+    event ItemRemoved(address itemAddress, uint256 when);
+    event ItemPurchased(address who, address itemAddress, uint256 amount, uint256 when);
+&nbsp;
+    address treasuryContract;
+&nbsp;
+    struct Item {
+        uint256 price;
+        uint256 listPointer;
+    }
+&nbsp;
+    mapping(address =&gt; Item) public itemStructs;
+    address[] public itemList;
+&nbsp;
+<span class="fstat-no" title="function not covered" >    function setTreasuryContract(address _treasuryContractAddress) public {</span>
+<span class="cstat-no" title="statement not covered" >        treasuryContract = _treasuryContractAddress</span>;
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    function list(address _itemAddress, uint256 _itemPrice) public {</span>
+<span class="cstat-no" title="statement not covered" >        require(false == isEntity(_itemAddress), "Item already exists")</span>;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        itemStructs[_itemAddress] = Item({price : _itemPrice, listPointer : itemList.length})</span>;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        itemList.push(_itemAddress)</span>;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        emit ItemAdded(_itemAddress, _itemPrice, block.timestamp);</span>
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    function update(address _itemAddress, uint256 _itemPrice) public {</span>
+<span class="cstat-no" title="statement not covered" >        require(isEntity(_itemAddress), "Item not found")</span>;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        itemStructs[_itemAddress].price = _itemPrice</span>;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        emit ItemUpdated(_itemAddress, _itemPrice, block.timestamp);</span>
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    function remove(address _itemAddress) public {</span>
+<span class="cstat-no" title="statement not covered" >        require(isEntity(_itemAddress), "Item not found")</span>;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        uint256 rowToDelete = itemStructs[_itemAddress].listPointer;</span>
+&nbsp;
+        // If length is  1 or the row to delete is the final row we will just remove the record
+<span class="cstat-no" title="statement not covered" >        if (itemList.length &gt; 1 &amp;&amp; rowToDelete != itemList.length - 1) {</span>
+            // last row in list
+<span class="cstat-no" title="statement not covered" >            address rowToMove = itemList[itemList.length - 1];</span>
+&nbsp;
+            // swap delete row with row ot move
+<span class="cstat-no" title="statement not covered" >            itemStructs[rowToMove].listPointer = rowToDelete</span>;
+        }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        itemList.pop()</span>;
+        delete itemStructs[_itemAddress];
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        emit ItemRemoved(_itemAddress, block.timestamp);</span>
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    function purchase(address _itemAddress, uint256 _amount) public {</span>
+<span class="cstat-no" title="statement not covered" >        Item memory itemListing = itemStructs[_itemAddress];</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        uint256 balance = Treasury(treasuryContract).balances(msg.sender);</span>
+<span class="cstat-no" title="statement not covered" >        uint256 totalCost = itemListing.price.mul(_amount);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        require(balance &gt;= totalCost, "Not enough funds")</span>;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        Treasury(treasuryContract).spendCash(msg.sender, totalCost)</span>;
+<span class="cstat-no" title="statement not covered" >        ItemBase(_itemAddress).mint(msg.sender, _amount)</span>;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        emit ItemPurchased(msg.sender, _itemAddress, _amount, block.timestamp);</span>
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    function getItemCount() public view returns (uint256 itemCount) {</span>
+<span class="cstat-no" title="statement not covered" >        return itemList.length;</span>
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    function isEntity(address _itemAddress) public view returns (bool) {</span>
+<span class="cstat-no" title="statement not covered" >        if (itemList.length == 0) {</span>
+<span class="cstat-no" title="statement not covered" >            return false;</span>
+        }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        return itemList[itemStructs[_itemAddress].listPointer] == _itemAddress;</span>
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    function getItems() public view returns (address[] memory, uint256[] memory) {</span>
+<span class="cstat-no" title="statement not covered" >        address[] memory itemAddresses = new address[](itemList.length);</span>
+<span class="cstat-no" title="statement not covered" >        uint256[] memory itemPrices = new uint256[](itemList.length);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        for (uint256 i = 0; i &lt; itemList.length; i++) {</span>
+<span class="cstat-no" title="statement not covered" >            itemAddresses[i] = itemList[i]</span>;
+<span class="cstat-no" title="statement not covered" >            itemPrices[i] = itemStructs[itemList[i]].price</span>;
+        }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        return (itemAddresses, itemPrices);</span>
+    }
+}
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Dec 31 2020 11:24:36 GMT+0000 (Greenwich Mean Time)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>
