@@ -6,19 +6,25 @@ pragma experimental ABIEncoderV2;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC1155/ERC1155Holder.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/math/SafeMath.sol";
 import "./Pepemon.sol";
 import "./CardBase.sol";
 
 contract Deck is ERC721, Ownable {
+    using SafeMath for uint256;
+
     struct Decks {
         // todo this will relate only to the ID of the card type, not the specific card.
         // Add battle card type to struct
         uint256 battleCardId;
+
         // mapping from Action Card Type to list of card IDs
         // I.E Quick Attack => [1, 50, 82]
         mapping(uint256 => ActionCardType) actionCardTypes;
         // Unordered array of Card Type Ids contained in the deck, mapped to ActionCardType struct via the pointer
         uint256[] actionCardTypeList;
+
+        uint256 cardCount;
     }
 
     struct ActionCardType {
@@ -63,6 +69,10 @@ contract Deck is ERC721, Ownable {
         actionCardAddress = _actionCardAddress;
     }
 
+    function setMaxActionCards(uint8 _maxActionCards) public onlyOwner {
+        MAX_ACTION_CARDS = _maxActionCards;
+    }
+
     function createDeck() public {
         _safeMint(msg.sender, nextDeckId);
     }
@@ -88,11 +98,27 @@ contract Deck is ERC721, Ownable {
     }
 
     function addActionCards(uint256 _deckId, ActionCardRequest[] memory _actionCards) public {
-        // require(decks[_deckId].actionCards.length <= MAX_ACTION_CARDS, "Too many cards");
+        require(
+            decks[_deckId].cardCount.add(_actionCards.length) <= MAX_ACTION_CARDS,
+            "Too many cards"
+        );
 
         for (uint256 i = 0; i < _actionCards.length; i++) {
             addActionCard(_deckId, _actionCards[i].actionCardTypeId, _actionCards[i].actionCardId);
         }
+
+        decks[_deckId].cardCount = decks[_deckId].cardCount.add(_actionCards.length);
+    }
+
+    function removeActionCards(
+        uint256 _deckId,
+        ActionCardRequest[] memory _actionCards
+    ) public {
+        for (uint256 i = 0; i < _actionCards.length; i++) {
+            removeActionCard(_deckId, _actionCards[i].actionCardTypeId, _actionCards[i].actionCardId);
+        }
+
+        decks[_deckId].cardCount = decks[_deckId].cardCount.sub(_actionCards.length);
     }
 
     function addActionCard(
@@ -103,15 +129,15 @@ contract Deck is ERC721, Ownable {
         addActionCardTypeToDeck(_deckId, _actionCardTypeId);
 
         decks[_deckId].actionCardTypes[_actionCardTypeId].cards[_actionCardId] = ActionCard({
-            actionCardId: _actionCardId,
-            pointer: 1,
-            isEntity: true
-        });
+            actionCardId : _actionCardId,
+            pointer : 1,
+            isEntity : true
+            });
 
         decks[_deckId].actionCardTypes[_actionCardTypeId].cardList.push(_actionCardId);
     }
 
-    function addActionCardTypeToDeck(uint256 _deckId, uint256 _actionCardTypeId) public {
+    function addActionCardTypeToDeck(uint256 _deckId, uint256 _actionCardTypeId) internal {
         if (false == decks[_deckId].actionCardTypes[_actionCardTypeId].isEntity) {
             // Create the action card type
             ActionCardType storage actionCardList = decks[_deckId].actionCardTypes[_actionCardTypeId];
@@ -140,12 +166,6 @@ contract Deck is ERC721, Ownable {
 
         decks[_deckId].actionCardTypeList.pop();
         delete decks[_deckId].actionCardTypes[cardTypeToRemove];
-    }
-
-    function removeActionCards(uint256 _deckId, ActionCardRequest[] memory _actionCards) public {
-        for (uint256 i = 0; i < _actionCards.length; i++) {
-            removeActionCard(_deckId, _actionCards[i].actionCardTypeId, _actionCards[i].actionCardId);
-        }
     }
 
     function removeActionCard(
@@ -178,6 +198,7 @@ contract Deck is ERC721, Ownable {
         CardBase(actionCardAddress).transferFrom(address(this), msg.sender, _actionCardId);
     }
 
+    // VIEWS
     function getBattleCardForDeck(uint256 _deckId) public view returns (uint256) {
         return decks[_deckId].battleCardId;
     }

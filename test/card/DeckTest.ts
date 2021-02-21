@@ -50,7 +50,7 @@ describe('Deck', () => {
       await deck.addBattleCard(1, 22);
 
       await deck.decks(1).then((deck: any) => {
-        expect(deck).to.eq(22);
+        expect(deck['battleCardId']).to.eq(22);
       });
     });
 
@@ -113,6 +113,10 @@ describe('Deck', () => {
         ],
       );
 
+      await deck.decks(1).then((deck: any) => {
+        expect(deck['cardCount']).to.eq(2);
+      });
+
       await deck.getCardTypesInDeck(1).then((cardTypes: BigNumber[]) => {
         expect(cardTypes.length).to.eq(2);
         expect(cardTypes[0]).to.eq(20);
@@ -152,6 +156,10 @@ describe('Deck', () => {
         'actionCardId': 2,
       }]);
 
+      await deck.decks(1).then((deck: any) => {
+        expect(deck['cardCount']).to.eq(1);
+      });
+
       await deck.getCardTypesInDeck(1).then((cardTypeList: BigNumber[]) => {
         expect(cardTypeList.length).to.eq(1);
       });
@@ -159,6 +167,26 @@ describe('Deck', () => {
       await deck.getCardsFromTypeInDeck(1, 20).then((cardList: BigNumber[]) => {
         expect(cardList.length).to.eq(0);
       });
+
+    });
+
+    it('Should prevent exceeding the action card limit', async () => {
+      await deck.setMaxActionCards(1);
+
+      await expect(deck.addActionCards(
+        1,
+        [
+          {
+            'actionCardTypeId': 20,
+            'actionCardId': 2,
+          },
+          {
+            'actionCardTypeId': 12,
+            'actionCardId': 55,
+          },
+        ],
+      )).to.be.revertedWith("revert Too many cards");
+
 
     });
   });
