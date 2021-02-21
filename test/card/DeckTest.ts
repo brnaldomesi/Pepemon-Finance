@@ -22,6 +22,7 @@ describe('Deck', () => {
     actionCard = await deployMockContract(alice, ActionCardArtifact.abi);
 
     await deck.setBattleCardAddress(battleCard.address);
+    await deck.setActionCardAddress(actionCard.address);
 
     await battleCard.mock.ownerOf.withArgs(1).returns(alice.address);
   });
@@ -72,7 +73,7 @@ describe('Deck', () => {
 
       await deck.addBattleCard(1, 1);
 
-      await deck.removeBattleCard(1, 1);
+      await deck.removeBattleCard(1);
 
       await deck.getBattleCardForDeck(1).then(battleCard => {
         expect(battleCard).to.eq(0);
@@ -86,7 +87,7 @@ describe('Deck', () => {
       });
 
       it('Should prevent removing a battle card from a deck which you don\t own', async () => {
-        await expect(bobSignedDeck.removeBattleCard(1, 1)).to.be.revertedWith('revert Not your deck');
+        await expect(bobSignedDeck.removeBattleCard(1)).to.be.revertedWith('revert Not your deck');
       });
     });
   });
@@ -122,6 +123,39 @@ describe('Deck', () => {
         expect(cardList.length).to.eq(1);
         expect(cardList[0]).to.eq(2);
       });
+
+      await deck.getCardsFromTypeInDeck(1, 12).then((cardList: BigNumber[]) => {
+        expect(cardList.length).to.eq(1);
+        expect(cardList[0]).to.eq(55);
+      });
+    });
+
+    it('Should allow actions cards to be removed from the deck', async () => {
+      await actionCard.mock.transferFrom.withArgs(deck.address, alice.address, 2).returns();
+
+      await deck.addActionCards(
+        1,
+        [
+          {
+            'actionCardTypeId': 20,
+            'actionCardId': 2,
+          },
+          {
+            'actionCardTypeId': 12,
+            'actionCardId': 55,
+          },
+        ],
+      );
+
+      await deck.removeActionCards(1, [{
+        'actionCardTypeId': 20,
+        'actionCardId': 2,
+      }]);
+
+      await deck.getCardsFromTypeInDeck(1, 20).then((cardList: BigNumber[]) => {
+        expect(cardList.length).to.eq(0);
+      });
+
     });
   });
 

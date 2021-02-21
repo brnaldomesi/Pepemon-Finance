@@ -5,14 +5,13 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC1155/ERC1155Holder.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./Pepemon.sol";
+import "./CardBase.sol";
 
 contract Deck is ERC721, Ownable {
     struct Decks {
-
         // todo this will relate only to the ID of the card type, not the specific card.
         // Add battle card type to struct
         uint256 battleCardId;
-
         // mapping from Action Card Type to list of card IDs
         // I.E Quick Attack => [1, 50, 82]
         mapping(uint256 => ActionCardType) actionCardTypes;
@@ -26,7 +25,6 @@ contract Deck is ERC721, Ownable {
         bool isEntity;
         // Mapping from Action Card ID to the pointer. Will be used to accurately identify the specific card out of a list
         mapping(uint256 => ActionCard) cards;
-
         // Unordered array of Cards
         uint256[] cardList;
     }
@@ -79,10 +77,14 @@ contract Deck is ERC721, Ownable {
         decks[_deckId].battleCardId = _battleCardId;
     }
 
-    function removeBattleCard(uint256 _deckId, uint256 _battleCardId) public {
+    function removeBattleCard(uint256 _deckId) public {
         require(ownerOf(_deckId) == msg.sender, "Not your deck");
 
-        Pepemon(battleCardAddress).transferFrom(address(this), msg.sender, decks[_deckId].battleCardId);
+        Pepemon(battleCardAddress).transferFrom(
+            address(this),
+            msg.sender,
+            decks[_deckId].battleCardId
+        );
 
         decks[_deckId].battleCardId = 0;
     }
@@ -124,25 +126,37 @@ contract Deck is ERC721, Ownable {
         }
     }
 
-    //    function remove(address _itemAddress) public {
-    //        require(isEntity(_itemAddress), "Item not found");
-    //
-    //        uint256 rowToDelete = itemStructs[_itemAddress].listPointer;
-    //
-    //        // If length is  1 or the row to delete is the final row we will just remove the record
-    //        if (itemList.length > 1 && rowToDelete != itemList.length - 1) {
-    //            // last row in list
-    //            address rowToMove = itemList[itemList.length - 1];
-    //
-    //            // swap delete row with row ot move
-    //            itemStructs[rowToMove].listPointer = rowToDelete;
-    //        }
-    //
-    //        itemList.pop();
-    //        delete itemStructs[_itemAddress];
-    //
-    //        emit ItemRemoved(_itemAddress, block.timestamp);
-    //    }
+    function removeActionCards(uint256 _deckId, ActionCardRequest[] memory _actionCards) public {
+        for (uint256 i = 0; i < _actionCards.length; i++) {
+            removeActionCard(_deckId, _actionCards[i].actionCardTypeId, _actionCards[i].actionCardId);
+        }
+    }
+
+    function removeActionCard(
+        uint256 _deckId,
+        uint256 _actionCardTypeId,
+        uint256 _actionCardId
+    ) internal {
+        ActionCardType storage actionCardType = decks[_deckId].actionCardTypes[_actionCardTypeId];
+        ActionCard storage actionCard = decks[_deckId].actionCardTypes[_actionCardTypeId].cards[_actionCardId];
+
+        uint256 cardToRemove = actionCard.pointer;
+
+        // If there is more than 1 card in the list & it is not the last one we will swap the last card to the position
+        // of the one we're removing (this allows us avoid reshuffling)
+        if (actionCardType.cardList.length > 1 && cardToRemove != actionCardType.cardList.length - 1) {
+            // last row in list
+            uint256 rowToMove = actionCardType.cardList[actionCardType.cardList.length - 1];
+
+            // swap delete row with row to move
+            decks[_deckId].actionCardTypes[_actionCardTypeId].cards[rowToMove].pointer = cardToRemove;
+        }
+
+        decks[_deckId].actionCardTypes[_actionCardTypeId].cardList.pop();
+        delete decks[_deckId].actionCardTypes[_actionCardTypeId].cards[_actionCardId];
+
+        CardBase(actionCardAddress).transferFrom(address(this), msg.sender, _actionCardId);
+    }
 
     function getBattleCardForDeck(uint256 _deckId) public view returns (uint256) {
         return decks[_deckId].battleCardId;
