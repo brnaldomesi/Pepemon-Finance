@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 pragma solidity 0.7.4;
 pragma experimental ABIEncoderV2;
 
@@ -80,11 +82,7 @@ contract Deck is ERC721, Ownable {
     function removeBattleCard(uint256 _deckId) public {
         require(ownerOf(_deckId) == msg.sender, "Not your deck");
 
-        Pepemon(battleCardAddress).transferFrom(
-            address(this),
-            msg.sender,
-            decks[_deckId].battleCardId
-        );
+        Pepemon(battleCardAddress).transferFrom(address(this), msg.sender, decks[_deckId].battleCardId);
 
         decks[_deckId].battleCardId = 0;
     }
@@ -126,6 +124,24 @@ contract Deck is ERC721, Ownable {
         }
     }
 
+    function removeActionCardTypeFromDeck(uint256 _deckId, uint256 _actionCardTypeId) internal {
+        Decks storage deck = decks[_deckId];
+        ActionCardType storage actionCardType = decks[_deckId].actionCardTypes[_actionCardTypeId];
+
+        uint256 cardTypeToRemove = actionCardType.pointer;
+
+        if (deck.actionCardTypeList.length > 1 && cardTypeToRemove != deck.actionCardTypeList.length - 1) {
+            // last card type in list
+            uint256 rowToMove = deck.actionCardTypeList[deck.actionCardTypeList.length - 1];
+
+            // swap delete row with row to move
+            decks[_deckId].actionCardTypes[rowToMove].pointer = cardTypeToRemove;
+        }
+
+        decks[_deckId].actionCardTypeList.pop();
+        delete decks[_deckId].actionCardTypes[cardTypeToRemove];
+    }
+
     function removeActionCards(uint256 _deckId, ActionCardRequest[] memory _actionCards) public {
         for (uint256 i = 0; i < _actionCards.length; i++) {
             removeActionCard(_deckId, _actionCards[i].actionCardTypeId, _actionCards[i].actionCardId);
@@ -145,7 +161,7 @@ contract Deck is ERC721, Ownable {
         // If there is more than 1 card in the list & it is not the last one we will swap the last card to the position
         // of the one we're removing (this allows us avoid reshuffling)
         if (actionCardType.cardList.length > 1 && cardToRemove != actionCardType.cardList.length - 1) {
-            // last row in list
+            // last card in list
             uint256 rowToMove = actionCardType.cardList[actionCardType.cardList.length - 1];
 
             // swap delete row with row to move
@@ -153,7 +169,11 @@ contract Deck is ERC721, Ownable {
         }
 
         decks[_deckId].actionCardTypes[_actionCardTypeId].cardList.pop();
-        delete decks[_deckId].actionCardTypes[_actionCardTypeId].cards[_actionCardId];
+        delete decks[_deckId].actionCardTypes[_actionCardTypeId].cards[cardToRemove];
+
+        if (actionCardType.cardList.length == 0) {
+            removeActionCardTypeFromDeck(_deckId, _actionCardTypeId);
+        }
 
         CardBase(actionCardAddress).transferFrom(address(this), msg.sender, _actionCardId);
     }

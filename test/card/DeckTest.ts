@@ -152,6 +152,10 @@ describe('Deck', () => {
         'actionCardId': 2,
       }]);
 
+      await deck.getCardTypesInDeck(1).then((cardTypeList: BigNumber[]) => {
+        expect(cardTypeList.length).to.eq(1);
+      });
+
       await deck.getCardsFromTypeInDeck(1, 20).then((cardList: BigNumber[]) => {
         expect(cardList.length).to.eq(0);
       });
