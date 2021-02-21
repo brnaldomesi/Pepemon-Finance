@@ -103,10 +103,10 @@ contract Deck is ERC721, Ownable {
         addActionCardTypeToDeck(_deckId, _actionCardTypeId);
 
         decks[_deckId].actionCardTypes[_actionCardTypeId].cards[_actionCardId] = ActionCard({
-            actionCardId : _actionCardId,
-            pointer : 1,
-            isEntity : true
-            });
+            actionCardId: _actionCardId,
+            pointer: 1,
+            isEntity: true
+        });
 
         decks[_deckId].actionCardTypes[_actionCardTypeId].cardList.push(_actionCardId);
     }

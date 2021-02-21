@@ -1,7 +1,7 @@
 {
-  "name": "stream",
+  "name": "pepe_battle",
   "version": "1.0.0",
-  "description": "Getting paid has never been so simple, or so instantaneous",
+  "description": "Battle your pepes",
   "main": "index.js",
   "scripts": {
     "build": "npm run compile && npm run typechain",
