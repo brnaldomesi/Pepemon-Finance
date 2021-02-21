@@ -1,9 +1,11 @@
 import { deployDeckContract, getProvider } from '../helpers/contract';
-import { Deck, Pepemon } from '../../typechain';
+import { CardBase, Deck, Pepemon } from '../../typechain';
 import PepemonArtifact from '../../artifacts/contracts/Pepemon.sol/Pepemon.json';
+import ActionCardArtifact from '../../artifacts/contracts/CardBase.sol/CardBase.json';
 
 import { expect } from 'chai';
 import { deployMockContract, MockContract } from 'ethereum-waffle';
+import { BigNumber } from 'ethers';
 
 const [alice, bob] = getProvider().getWallets();
 
@@ -11,11 +13,13 @@ describe('Deck', () => {
   let deck: Deck;
   let bobSignedDeck: Deck;
   let battleCard: Pepemon | MockContract;
+  let actionCard: CardBase | MockContract;
 
   beforeEach(async () => {
     deck = await deployDeckContract(alice);
     bobSignedDeck = await deck.connect(bob);
     battleCard = await deployMockContract(alice, PepemonArtifact.abi);
+    actionCard = await deployMockContract(alice, ActionCardArtifact.abi);
 
     await deck.setBattleCardAddress(battleCard.address);
 
@@ -33,7 +37,6 @@ describe('Deck', () => {
   describe('Battle card', async () => {
     beforeEach(async () => {
       await deck.createDeck();
-
     });
 
     it('Should allow adding a Battle Card to the deck', async () => {
@@ -59,11 +62,46 @@ describe('Deck', () => {
       await deck.addBattleCard(1, 1);
       await deck.addBattleCard(1, 2);
     });
+
     describe('Permissions', async () => {
       it('Should prevent adding cards which you don\'t own', async () => {
         await battleCard.mock.transferFrom.withArgs(alice.address, deck.address, 1).returns();
 
-        await expect(bobSignedDeck.addBattleCard(1, 1)).to.be.revertedWith("revert Not your card");
+        // await expect(bobSignedDeck.addBattleCard(1, 1)).to.be.revertedWith('revert Not your card');
+      });
+    });
+  });
+
+  describe('Action cards', async () => {
+    beforeEach(async () => {
+      await deck.createDeck();
+      await actionCard.mock.ownerOf.withArgs(1).returns(alice.address);
+    });
+
+    it('Should allow action cards to be added to the deck', async () => {
+      await deck.addActionCards(
+        1,
+        [
+          {
+            'actionCardTypeId': 20,
+            'actionCardId': 2,
+          },
+          {
+            'actionCardTypeId': 12,
+            'actionCardId': 55,
+          },
+        ],
+      );
+
+      await deck.getCardTypesInDeck(1).then((cardTypes: BigNumber[]) => {
+        expect(cardTypes.length).to.eq(2);
+        expect(cardTypes[0]).to.eq(20);
+        expect(cardTypes[1]).to.eq(12);
+      });
+
+      await deck.getCardsFromTypeInDeck(1, 20).then((cardList: BigNumber[]) => {
+        expect(cardList.length).to.eq(1);
+        expect(cardList[0]).to.eq(2);
       });
     });
   });
