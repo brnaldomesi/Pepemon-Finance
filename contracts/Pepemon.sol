@@ -10,7 +10,5 @@ contract Pepemon is ERC721, Ownable {
         nextItemId = 0;
     }
 
-    function mint(address _who) public {
-
-    }
+    function mint(address _who) public {}
 }

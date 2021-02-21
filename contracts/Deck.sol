@@ -7,14 +7,15 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "./Pepemon.sol";
 
 contract Deck is ERC721, Ownable {
-
     struct Decks {
+
+        // todo this will relate only to the ID of the card type, not the specific card.
+        // Add battle card type to struct
         uint256 battleCardId;
 
         // mapping from Action Card Type to list of card IDs
         // I.E Quick Attack => [1, 50, 82]
         mapping(uint256 => ActionCardType) actionCardTypes;
-
         // Unordered array of Card Type Ids contained in the deck, mapped to ActionCardType struct via the pointer
         uint256[] actionCardTypeList;
     }
@@ -23,8 +24,7 @@ contract Deck is ERC721, Ownable {
         uint256 actionCardTypeId;
         uint256 pointer;
         bool isEntity;
-
-        // Mapping from Action Card ID to the
+        // Mapping from Action Card ID to the pointer. Will be used to accurately identify the specific card out of a list
         mapping(uint256 => ActionCard) cards;
 
         // Unordered array of Cards
@@ -79,19 +79,27 @@ contract Deck is ERC721, Ownable {
         decks[_deckId].battleCardId = _battleCardId;
     }
 
+    function removeBattleCard(uint256 _deckId, uint256 _battleCardId) public {
+        require(ownerOf(_deckId) == msg.sender, "Not your deck");
+
+        Pepemon(battleCardAddress).transferFrom(address(this), msg.sender, decks[_deckId].battleCardId);
+
+        decks[_deckId].battleCardId = 0;
+    }
+
     function addActionCards(uint256 _deckId, ActionCardRequest[] memory _actionCards) public {
         // require(decks[_deckId].actionCards.length <= MAX_ACTION_CARDS, "Too many cards");
 
         for (uint256 i = 0; i < _actionCards.length; i++) {
-            addActionCard(
-                _deckId,
-                _actionCards[i].actionCardTypeId,
-                _actionCards[i].actionCardId
-            );
+            addActionCard(_deckId, _actionCards[i].actionCardTypeId, _actionCards[i].actionCardId);
         }
     }
 
-    function addActionCard(uint256 _deckId, uint256 _actionCardTypeId, uint256 _actionCardId) internal {
+    function addActionCard(
+        uint256 _deckId,
+        uint256 _actionCardTypeId,
+        uint256 _actionCardId
+    ) internal {
         addActionCardTypeToDeck(_deckId, _actionCardTypeId);
 
         decks[_deckId].actionCardTypes[_actionCardTypeId].cards[_actionCardId] = ActionCard({
@@ -116,7 +124,6 @@ contract Deck is ERC721, Ownable {
         }
     }
 
-
     //    function remove(address _itemAddress) public {
     //        require(isEntity(_itemAddress), "Item not found");
     //
@@ -137,8 +144,11 @@ contract Deck is ERC721, Ownable {
     //        emit ItemRemoved(_itemAddress, block.timestamp);
     //    }
 
+    function getBattleCardForDeck(uint256 _deckId) public view returns (uint256) {
+        return decks[_deckId].battleCardId;
+    }
 
-    function getCardTypesInDeck(uint256 _deckId) view public returns (uint256[] memory)  {
+    function getCardTypesInDeck(uint256 _deckId) public view returns (uint256[] memory) {
         Decks storage deck = decks[_deckId];
 
         uint256[] memory actionCardTypes = new uint256[](deck.actionCardTypeList.length);
@@ -150,7 +160,7 @@ contract Deck is ERC721, Ownable {
         return actionCardTypes;
     }
 
-    function getCardsFromTypeInDeck(uint256 _deckId, uint256 _cardTypeId) view public returns (uint256[] memory)  {
+    function getCardsFromTypeInDeck(uint256 _deckId, uint256 _cardTypeId) public view returns (uint256[] memory) {
         Decks storage deck = decks[_deckId];
         ActionCardType storage actionCardType = deck.actionCardTypes[_cardTypeId];
 

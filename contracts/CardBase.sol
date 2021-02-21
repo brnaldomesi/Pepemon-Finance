@@ -8,12 +8,7 @@ contract CardBase is ERC721, Ownable {
     event CardCreated(string name, CardStats cardStats, uint256 when);
     event CardMinted(address who, uint256 id, uint256 when);
 
-    enum Type {
-        OFFENCE,
-        DEFENCE,
-        SPECIAL_OFFENCE,
-        SPECIAL_DEFENCE
-    }
+    enum Type {OFFENCE, DEFENCE, SPECIAL_OFFENCE, SPECIAL_DEFENCE}
 
     struct AttackStats {
         uint8 effect;

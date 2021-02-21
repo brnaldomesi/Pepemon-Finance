@@ -26,30 +26,34 @@ describe('Deck', () => {
     await battleCard.mock.ownerOf.withArgs(1).returns(alice.address);
   });
 
-  it('Should allow a deck to be created', async () => {
-    await deck.createDeck();
+  describe('Deck', async () => {
+    it('Should allow a deck to be created', async () => {
+      await deck.createDeck();
 
-    await deck.ownerOf(1).then(ownerAddress => {
-      expect(ownerAddress).to.eq(alice.address);
+      await deck.ownerOf(1).then(ownerAddress => {
+        expect(ownerAddress).to.eq(alice.address);
+      });
     });
   });
 
   describe('Battle card', async () => {
     beforeEach(async () => {
       await deck.createDeck();
+      await battleCard.mock.transferFrom.withArgs(alice.address, deck.address, 1).returns();
     });
 
     it('Should allow adding a Battle Card to the deck', async () => {
-      await battleCard.mock.transferFrom.withArgs(alice.address, deck.address, 1).returns();
+      await battleCard.mock.transferFrom.withArgs(alice.address, deck.address, 22).returns();
+      await battleCard.mock.ownerOf.withArgs(22).returns(alice.address);
 
-      await deck.addBattleCard(1, 1);
+      await deck.addBattleCard(1, 22);
 
       await deck.decks(1).then((deck: any) => {
-        expect(deck).to.eq(1);
+        expect(deck).to.eq(22);
       });
     });
 
-    it('Should return the previous battle card if one has been supplied', async () => {
+    it('Should return the previous battle card if one has already been supplied', async () => {
       // Mock deposit transfer
       await battleCard.mock.transferFrom.withArgs(alice.address, deck.address, 1).returns();
       await battleCard.mock.transferFrom.withArgs(alice.address, deck.address, 2).returns();
@@ -63,11 +67,26 @@ describe('Deck', () => {
       await deck.addBattleCard(1, 2);
     });
 
+    it('Should allow adding a Battle Card to the deck', async () => {
+      await battleCard.mock.transferFrom.withArgs(deck.address, alice.address, 1).returns();
+
+      await deck.addBattleCard(1, 1);
+
+      await deck.removeBattleCard(1, 1);
+
+      await deck.getBattleCardForDeck(1).then(battleCard => {
+        expect(battleCard).to.eq(0);
+      });
+
+    });
+
     describe('Permissions', async () => {
       it('Should prevent adding cards which you don\'t own', async () => {
-        await battleCard.mock.transferFrom.withArgs(alice.address, deck.address, 1).returns();
+        await expect(bobSignedDeck.addBattleCard(1, 1)).to.be.revertedWith('revert Not your card');
+      });
 
-        // await expect(bobSignedDeck.addBattleCard(1, 1)).to.be.revertedWith('revert Not your card');
+      it('Should prevent removing a battle card from a deck which you don\t own', async () => {
+        await expect(bobSignedDeck.removeBattleCard(1, 1)).to.be.revertedWith('revert Not your deck');
       });
     });
   });
@@ -106,7 +125,6 @@ describe('Deck', () => {
     });
   });
 
-
   describe('Permissions', async () => {
     it('Should prevent anyone but the owner from setting the Battle Card address', async () => {
       await expect(bobSignedDeck.setBattleCardAddress(bob.address)).to.be.revertedWith('Ownable: caller is not the owner');
@@ -116,5 +134,4 @@ describe('Deck', () => {
       await expect(bobSignedDeck.setActionCardAddress(bob.address)).to.be.revertedWith('Ownable: caller is not the owner');
     });
   });
-
 });
