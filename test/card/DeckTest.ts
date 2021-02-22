@@ -31,7 +31,7 @@ describe('Deck', () => {
     it('Should allow a deck to be created', async () => {
       await deck.createDeck();
 
-      await deck.ownerOf(1).then(ownerAddress => {
+      await deck.ownerOf(1).then((ownerAddress: string) => {
         expect(ownerAddress).to.eq(alice.address);
       });
     });
@@ -75,8 +75,8 @@ describe('Deck', () => {
 
       await deck.removeBattleCard(1);
 
-      await deck.getBattleCardForDeck(1).then(battleCard => {
-        expect(battleCard).to.eq(0);
+      await deck.getBattleCardForDeck(1).then((battleCardId: BigNumber) => {
+        expect(battleCardId).to.eq(0);
       });
 
     });
