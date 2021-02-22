@@ -17,13 +17,11 @@ contract Deck is ERC721, Ownable {
         // todo this will relate only to the ID of the card type, not the specific card.
         // Add battle card type to struct
         uint256 battleCardId;
-
         // mapping from Action Card Type to list of card IDs
         // I.E Quick Attack => [1, 50, 82]
         mapping(uint256 => ActionCardType) actionCardTypes;
         // Unordered array of Card Type Ids contained in the deck, mapped to ActionCardType struct via the pointer
         uint256[] actionCardTypeList;
-
         uint256 cardCount;
     }
 
@@ -98,10 +96,7 @@ contract Deck is ERC721, Ownable {
     }
 
     function addActionCards(uint256 _deckId, ActionCardRequest[] memory _actionCards) public {
-        require(
-            decks[_deckId].cardCount.add(_actionCards.length) <= MAX_ACTION_CARDS,
-            "Too many cards"
-        );
+        require(decks[_deckId].cardCount.add(_actionCards.length) <= MAX_ACTION_CARDS, "Too many cards");
 
         for (uint256 i = 0; i < _actionCards.length; i++) {
             addActionCard(_deckId, _actionCards[i].actionCardTypeId, _actionCards[i].actionCardId);
@@ -110,10 +105,7 @@ contract Deck is ERC721, Ownable {
         decks[_deckId].cardCount = decks[_deckId].cardCount.add(_actionCards.length);
     }
 
-    function removeActionCards(
-        uint256 _deckId,
-        ActionCardRequest[] memory _actionCards
-    ) public {
+    function removeActionCards(uint256 _deckId, ActionCardRequest[] memory _actionCards) public {
         for (uint256 i = 0; i < _actionCards.length; i++) {
             removeActionCard(_deckId, _actionCards[i].actionCardTypeId, _actionCards[i].actionCardId);
         }
@@ -129,10 +121,10 @@ contract Deck is ERC721, Ownable {
         addActionCardTypeToDeck(_deckId, _actionCardTypeId);
 
         decks[_deckId].actionCardTypes[_actionCardTypeId].cards[_actionCardId] = ActionCard({
-            actionCardId : _actionCardId,
-            pointer : 1,
-            isEntity : true
-            });
+            actionCardId: _actionCardId,
+            pointer: 1,
+            isEntity: true
+        });
 
         decks[_deckId].actionCardTypes[_actionCardTypeId].cardList.push(_actionCardId);
     }
