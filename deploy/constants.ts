@@ -1,18 +1,10 @@
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { DeployFunction } from 'hardhat-deploy/types';
 
-export const CASH = 'Cash';
-export const PLAYER = 'Player';
-export const PLAYER_STATS = 'PlayerStats';
-export const SCHEME_MANAGER = 'SchemeManager';
-export const SCHEME_YIELD_FARM = 'YieldFarm';
-export const SCHEME_SCROUNGE_FOR_SATOSHIS = 'ScroungeForSatochis';
-export const SCHEME_TEST = 'TestScheme';
-export const SHOP = 'Shop';
-export const TREASURY = 'Treasury';
-export const TRAINING = 'Training';
+export const DECK = 'Deck';
 
-export const WEAPON_BASE = 'CardBase';
+export const ACTION_CARD_ADDRESS = "0xcb6768a968440187157cfe13b67cac82ef6cc5a4";
+export const BATTLE_CARD_ADDRESS = "0xcb6768a968440187157cfe13b67cac82ef6cc5a4";
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {};
 

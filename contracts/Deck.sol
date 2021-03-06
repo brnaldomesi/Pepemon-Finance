@@ -7,43 +7,29 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC1155/ERC1155Holder.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
-import "./Pepemon.sol";
+import "./PepemonFactory.sol";
 import "./CardBase.sol";
 
-contract Deck is ERC721, Ownable {
+contract Deck is ERC721, ERC1155Holder, Ownable {
     using SafeMath for uint256;
 
     struct Decks {
-        // todo this will relate only to the ID of the card type, not the specific card.
-        // Add battle card type to struct
         uint256 battleCardId;
-        // mapping from Action Card Type to list of card IDs
-        // I.E Quick Attack => [1, 50, 82]
+        uint256 actionCardCount;
         mapping(uint256 => ActionCardType) actionCardTypes;
-        // Unordered array of Card Type Ids contained in the deck, mapped to ActionCardType struct via the pointer
         uint256[] actionCardTypeList;
-        uint256 cardCount;
     }
 
     struct ActionCardType {
         uint256 actionCardTypeId;
-        uint256 pointer;
-        bool isEntity;
-        // Mapping from Action Card ID to the pointer. Will be used to accurately identify the specific card out of a list
-        mapping(uint256 => ActionCard) cards;
-        // Unordered array of Cards
-        uint256[] cardList;
-    }
-
-    struct ActionCard {
-        uint256 actionCardId;
+        uint256 count;
         uint256 pointer;
         bool isEntity;
     }
 
     struct ActionCardRequest {
         uint256 actionCardTypeId;
-        uint256 actionCardId;
+        uint256 amount;
     }
 
     uint8 public MAX_ACTION_CARDS;
@@ -76,70 +62,69 @@ contract Deck is ERC721, Ownable {
     }
 
     function addBattleCard(uint256 _deckId, uint256 _battleCardId) public {
-        require(Pepemon(battleCardAddress).ownerOf(_battleCardId) == msg.sender, "Not your card");
+        require(PepemonFactory(battleCardAddress).balanceOf(msg.sender, _battleCardId) >= 1, "Don't own battle card");
+        require(_battleCardId != decks[_deckId].battleCardId, "Card already in deck");
 
-        Pepemon(battleCardAddress).transferFrom(msg.sender, address(this), _battleCardId);
-
-        if (decks[_deckId].battleCardId != 0) {
-            Pepemon(battleCardAddress).transferFrom(address(this), msg.sender, decks[_deckId].battleCardId);
-        }
-
+        uint256 oldBattleCardId = decks[_deckId].battleCardId;
         decks[_deckId].battleCardId = _battleCardId;
+
+        PepemonFactory(battleCardAddress).safeTransferFrom(msg.sender, address(this), _battleCardId, 1, "");
+
+        returnBattleCard(oldBattleCardId);
     }
 
     function removeBattleCard(uint256 _deckId) public {
         require(ownerOf(_deckId) == msg.sender, "Not your deck");
 
-        Pepemon(battleCardAddress).transferFrom(address(this), msg.sender, decks[_deckId].battleCardId);
+        uint256 oldBattleCardId = decks[_deckId].battleCardId;
 
         decks[_deckId].battleCardId = 0;
+
+        returnBattleCard(oldBattleCardId);
     }
 
     function addActionCards(uint256 _deckId, ActionCardRequest[] memory _actionCards) public {
-        require(decks[_deckId].cardCount.add(_actionCards.length) <= MAX_ACTION_CARDS, "Too many cards");
-
         for (uint256 i = 0; i < _actionCards.length; i++) {
-            addActionCard(_deckId, _actionCards[i].actionCardTypeId, _actionCards[i].actionCardId);
+            addActionCard(_deckId, _actionCards[i].actionCardTypeId, _actionCards[i].amount);
         }
-
-        decks[_deckId].cardCount = decks[_deckId].cardCount.add(_actionCards.length);
     }
 
     function removeActionCards(uint256 _deckId, ActionCardRequest[] memory _actionCards) public {
         for (uint256 i = 0; i < _actionCards.length; i++) {
-            removeActionCard(_deckId, _actionCards[i].actionCardTypeId, _actionCards[i].actionCardId);
+            removeActionCard(_deckId, _actionCards[i].actionCardTypeId, _actionCards[i].amount);
         }
-
-        decks[_deckId].cardCount = decks[_deckId].cardCount.sub(_actionCards.length);
     }
 
+    // INTERNALS
     function addActionCard(
         uint256 _deckId,
         uint256 _actionCardTypeId,
-        uint256 _actionCardId
+        uint256 _amount
     ) internal {
-        addActionCardTypeToDeck(_deckId, _actionCardTypeId);
+        require(MAX_ACTION_CARDS >= decks[_deckId].actionCardCount.add(_amount), "Deck is full");
+        require(
+            PepemonFactory(actionCardAddress).balanceOf(msg.sender, _actionCardTypeId) >= _amount,
+            "You don't have enough of this card"
+        );
 
-        decks[_deckId].actionCardTypes[_actionCardTypeId].cards[_actionCardId] = ActionCard({
-            actionCardId: _actionCardId,
-            pointer: 1,
-            isEntity: true
-        });
+        if (!decks[_deckId].actionCardTypes[_actionCardTypeId].isEntity) {
+            decks[_deckId].actionCardTypes[_actionCardTypeId] = ActionCardType({
+                actionCardTypeId: _actionCardTypeId,
+                count: _amount,
+                pointer: decks[_deckId].actionCardTypeList.length,
+                isEntity: true
+            });
 
-        decks[_deckId].actionCardTypes[_actionCardTypeId].cardList.push(_actionCardId);
-    }
-
-    function addActionCardTypeToDeck(uint256 _deckId, uint256 _actionCardTypeId) internal {
-        if (false == decks[_deckId].actionCardTypes[_actionCardTypeId].isEntity) {
-            // Create the action card type
-            ActionCardType storage actionCardList = decks[_deckId].actionCardTypes[_actionCardTypeId];
-            actionCardList.actionCardTypeId = _actionCardTypeId;
-            actionCardList.pointer = decks[_deckId].actionCardTypeList.length;
-            actionCardList.isEntity = true;
-
-            // Append the ID to the list
+            // Prepend the ID to the list
             decks[_deckId].actionCardTypeList.push(_actionCardTypeId);
+        } else {
+            ActionCardType storage actionCard = decks[_deckId].actionCardTypes[_actionCardTypeId];
+            actionCard.count = actionCard.count.add(_amount);
         }
+
+        decks[_deckId].actionCardCount = decks[_deckId].actionCardCount.add(_amount);
+
+        PepemonFactory(actionCardAddress).safeTransferFrom(msg.sender, address(this), _actionCardTypeId, _amount, "");
     }
 
     function removeActionCardTypeFromDeck(uint256 _deckId, uint256 _actionCardTypeId) internal {
@@ -163,31 +148,25 @@ contract Deck is ERC721, Ownable {
     function removeActionCard(
         uint256 _deckId,
         uint256 _actionCardTypeId,
-        uint256 _actionCardId
+        uint256 _amount
     ) internal {
-        ActionCardType storage actionCardType = decks[_deckId].actionCardTypes[_actionCardTypeId];
-        ActionCard storage actionCard = decks[_deckId].actionCardTypes[_actionCardTypeId].cards[_actionCardId];
+        ActionCardType storage actionCardList = decks[_deckId].actionCardTypes[_actionCardTypeId];
+        actionCardList.count = actionCardList.count.sub(_amount);
 
-        uint256 cardToRemove = actionCard.pointer;
+        decks[_deckId].actionCardCount = decks[_deckId].actionCardCount.sub(_amount);
 
-        // If there is more than 1 card in the list & it is not the last one we will swap the last card to the position
-        // of the one we're removing (this allows us avoid reshuffling)
-        if (actionCardType.cardList.length > 1 && cardToRemove != actionCardType.cardList.length - 1) {
-            // last card in list
-            uint256 rowToMove = actionCardType.cardList[actionCardType.cardList.length - 1];
-
-            // swap delete row with row to move
-            decks[_deckId].actionCardTypes[_actionCardTypeId].cards[rowToMove].pointer = cardToRemove;
+        if (actionCardList.count == 0) {
+            decks[_deckId].actionCardTypeList.pop();
+            delete decks[_deckId].actionCardTypes[_actionCardTypeId];
         }
 
-        decks[_deckId].actionCardTypes[_actionCardTypeId].cardList.pop();
-        delete decks[_deckId].actionCardTypes[_actionCardTypeId].cards[cardToRemove];
+        PepemonFactory(actionCardAddress).safeTransferFrom(address(this), msg.sender, _actionCardTypeId, _amount, "");
+    }
 
-        if (actionCardType.cardList.length == 0) {
-            removeActionCardTypeFromDeck(_deckId, _actionCardTypeId);
+    function returnBattleCard(uint256 _battleCardId) internal {
+        if (_battleCardId != 0) {
+            PepemonFactory(battleCardAddress).safeTransferFrom(address(this), msg.sender, _battleCardId, 1, "");
         }
-
-        CardBase(actionCardAddress).transferFrom(address(this), msg.sender, _actionCardId);
     }
 
     // VIEWS
@@ -207,17 +186,8 @@ contract Deck is ERC721, Ownable {
         return actionCardTypes;
     }
 
-    function getCardsFromTypeInDeck(uint256 _deckId, uint256 _cardTypeId) public view returns (uint256[] memory) {
-        Decks storage deck = decks[_deckId];
-        ActionCardType storage actionCardType = deck.actionCardTypes[_cardTypeId];
-
-        uint256[] memory actionCardList = new uint256[](actionCardType.cardList.length);
-
-        for (uint256 i = 0; i < actionCardType.cardList.length; i++) {
-            actionCardList[i] = actionCardType.cardList[i];
-        }
-
-        return actionCardList;
+    function getCountOfCardTypeInDeck(uint256 _deckId, uint256 _cardTypeId) public view returns (uint256) {
+        return decks[_deckId].actionCardTypes[_cardTypeId].count;
     }
 
     modifier sendersDeck(uint256 _deckId) {

@@ -32,7 +32,7 @@ const config: HardhatUserConfig = {
   networks: {
     hardhat: {
       forking: {
-        enabled: false,
+        enabled: true,
         url: 'https://eth-mainnet.alchemyapi.io/v2/' + environment.alchemyKey,
       },
     },
