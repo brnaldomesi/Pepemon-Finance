@@ -28,12 +28,28 @@ const config: HardhatUserConfig = {
     cache: './cache',
     artifacts: './artifacts',
   },
-  defaultNetwork: 'hardhat',
+  defaultNetwork: 'rinkeby',
   networks: {
+    rinkeby: {
+      url: "https://eth-rinkeby.alchemyapi.io/v2/" + environment.alchemyRinkebyKey,
+      chainId: 4,
+      accounts: {
+          mnemonic: "test test test test test test test test test test test junk",
+          path: "m/44'/60'/0'/0",
+          initialIndex: 0,
+          count: 0
+      }
+    },
     hardhat: {
       forking: {
         enabled: true,
         url: 'https://eth-mainnet.alchemyapi.io/v2/' + environment.alchemyKey,
+      },
+      accounts: {
+        mnemonic: "",
+        path: "m/44'/60'/0'/0",
+        initialIndex: 0,
+        count: 0
       },
     },
   },

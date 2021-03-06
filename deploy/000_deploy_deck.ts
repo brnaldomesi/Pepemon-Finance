@@ -1,18 +1,18 @@
-import { HardhatRuntimeEnvironment } from 'hardhat/types';
-import { DeployFunction } from 'hardhat-deploy/types';
-import { DECK } from './constants';
+import {HardhatRuntimeEnvironment} from 'hardhat/types';
+import {DeployFunction} from 'hardhat-deploy/types';
+import {DECK} from './constants';
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
-  const { deployments, getNamedAccounts } = hre;
-  const { deploy, log } = deployments;
+    const {deployments, getNamedAccounts} = hre;
+    const {deploy, log} = deployments;
 
-  const { deployer } = await getNamedAccounts();
+    const {deployer} = await getNamedAccounts();
 
-  log('Deploying Deck Contract...');
-  await deploy(DECK, {
-    from: deployer,
-    log: true,
-  });
+    log('Deploying Deck Contract from ' + deployer + "....");
+    await deploy(DECK, {
+      from: deployer,
+      log: true,
+    });
 };
 
 export default func;
