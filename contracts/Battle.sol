@@ -16,15 +16,14 @@ contract Battle is Deck {
         require(Deck(deckAddress).ownerOf(_attackingDeck) == msg.sender, "Must battle with your own deck");
         require(Deck(deckAddress).ownerOf(_defendingDeck) != msg.sender, "Cannot battle yourself");
 
-
-//        uint256[] getActionCards();
+        //        uint256[] getActionCards();
     }
 
     /**
      * @dev Returns array of action cards for a deck
      * @param _deckId uint256 ID of the deck
      */
-    function getActionCards(uint256 _deckId) public sendersDeck(_deckId) returns(uint256[] memory) {
+    function getActionCards(uint256 _deckId) public sendersDeck(_deckId) returns (uint256[] memory) {
         Decks storage deck = decks[_deckId];
         uint256[] memory actionCards = new uint256[](deck.actionCardCount);
         for (uint256 i = 0; i < deck.actionCardTypeList.length; i++) {
