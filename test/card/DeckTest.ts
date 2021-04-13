@@ -17,7 +17,7 @@ describe('Deck', () => {
 
     beforeEach(async () => {
         deck = await deployDeckContract(alice);
-        bobSignedDeck = await deck.connect(bob);
+        bobSignedDeck = deck.connect(bob);
         battleCard = await deployMockContract(alice, PepemonFactoryArtifact);
         actionCard = await deployMockContract(alice, PepemonFactoryArtifact);
 
