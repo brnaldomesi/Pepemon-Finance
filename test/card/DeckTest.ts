@@ -1,19 +1,20 @@
-import {deployDeckContract, getProvider} from '../helpers/contract';
-import {CardBase, Deck} from '../../typechain';
-import {PepemonFactory} from "../../typechain/PepemonFactory"
+import { deployDeckContract, getProvider } from '../helpers/contract';
+import { ActionCard, BattleCard, Deck } from '../../typechain';
+import { PepemonFactory } from "../../typechain/PepemonFactory"
 import PepemonFactoryArtifact from '../../contracts/abi/PepemonFactory.json';
 
-import {expect} from 'chai';
-import {deployMockContract, MockContract} from 'ethereum-waffle';
-import {BigNumber} from 'ethers';
+import { expect } from 'chai';
+import { deployMockContract, MockContract } from 'ethereum-waffle';
+import { BigNumber } from 'ethers';
 
 const [alice, bob] = getProvider().getWallets();
 
 describe('Deck', () => {
     let deck: Deck;
     let bobSignedDeck: Deck;
-    let battleCard: PepemonFactory | MockContract;
-    let actionCard: CardBase | MockContract;
+    // let battleCard: PepemonFactory | MockContract;
+    let battleCard: BattleCard | MockContract;
+    let actionCard: ActionCard | MockContract;
 
     beforeEach(async () => {
         deck = await deployDeckContract(alice);
@@ -84,12 +85,12 @@ describe('Deck', () => {
         });
 
         describe('Permissions', async () => {
-            it('Should prevent adding cards you don\t have', async () => {
+            it('Should prevent adding cards you don\'t have', async () => {
                 await battleCard.mock.balanceOf.withArgs(bob.address, 1).returns(0);
                 await expect(bobSignedDeck.addBattleCard(1, 1)).to.be.revertedWith('revert Don\'t own battle card');
             });
 
-            it('Should prevent removing a battle card from a deck which you don\t own', async () => {
+            it('Should prevent removing a battle card from a deck which you don\'t own', async () => {
                 await expect(bobSignedDeck.removeBattleCard(1)).to.be.revertedWith('revert Not your deck');
             });
         });

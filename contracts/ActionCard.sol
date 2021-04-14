@@ -5,10 +5,13 @@ pragma experimental ABIEncoderV2;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/math/SafeMath.sol";
 
-contract CardBase is ERC721, Ownable {
-    event CardCreated(string name, CardStats cardStats, uint256 when);
-    event CardMinted(address who, uint256 id, uint256 when);
+contract ActionCard is ERC721, Ownable {
+    using SafeMath for uint256;
+
+    event ActionCardCreated(string name, ActionCardStats actionCardStats, uint256 when);
+    event ActionCardMinted(address who, uint256 id, uint256 when);
 
     enum Type {OFFENCE, DEFENCE, SPECIAL_OFFENCE, SPECIAL_DEFENCE}
 
@@ -28,30 +31,36 @@ contract CardBase is ERC721, Ownable {
         uint8 nextTurns;
     }
 
-    struct CardStats {
+    struct ActionCardStats {
         Type _type;
         AttackStats _attackStats;
         DefenceStats _defenceStats;
     }
 
     uint256 nextCardId;
-    CardStats cardStats;
+    // ActionCardStats actionCardStats;
+    mapping(uint256 => ActionCardStats) public idToActionCardStats;
 
     constructor(
         string memory _name,
         string memory _symbol,
-        CardStats memory _cardStats
+        ActionCardStats memory _actionCardStats
     ) public ERC721(_name, _symbol) {
-        emit CardCreated(_name, _cardStats, block.timestamp);
+        emit ActionCardCreated(_name, _actionCardStats, block.timestamp);
 
-        cardStats = _cardStats;
-        nextCardId = 0;
+        // actionCardStats = _actionCardStats;
+        idToActionCardStats[nextCardId] = _actionCardStats;
+        nextCardId.add(1);
     }
 
     function mint(address _who) public {
-        emit CardMinted(_who, nextCardId, block.timestamp);
+        emit ActionCardMinted(_who, nextCardId, block.timestamp);
 
         _safeMint(_who, nextCardId);
-        nextCardId++;
+        nextCardId.add(1);
+    }
+
+    function getActionCard(uint256 _id) public returns (ActionCardStats memory) {
+        return idToActionCardStats[_id];
     }
 }

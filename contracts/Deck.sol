@@ -8,7 +8,8 @@ import "@openzeppelin/contracts/token/ERC1155/ERC1155Holder.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 import "./PepemonFactory.sol";
-import "./CardBase.sol";
+import "./ActionCard.sol";
+import "./BattleCard.sol";
 
 contract Deck is ERC721, ERC1155Holder, Ownable {
     using SafeMath for uint256;
@@ -33,28 +34,39 @@ contract Deck is ERC721, ERC1155Holder, Ownable {
     }
 
     uint8 public MAX_ACTION_CARDS;
+    uint8 public MIN_ACTION_CARDS;
 
     uint256 nextDeckId;
     address public battleCardAddress;
     address public actionCardAddress;
+
+    ActionCard actionCardContract;
+    BattleCard battleCardContract;
 
     mapping(uint256 => Decks) public decks;
 
     constructor() ERC721("Pepedeck", "Pepedeck") {
         nextDeckId = 1;
         MAX_ACTION_CARDS = 60;
+        MIN_ACTION_CARDS = 40;
     }
 
     function setBattleCardAddress(address _battleCardAddress) public onlyOwner {
         battleCardAddress = _battleCardAddress;
+        battleCardContract = BattleCard(battleCardAddress);
     }
 
     function setActionCardAddress(address _actionCardAddress) public onlyOwner {
         actionCardAddress = _actionCardAddress;
+        actionCardContract = ActionCard(actionCardAddress);
     }
 
     function setMaxActionCards(uint8 _maxActionCards) public onlyOwner {
         MAX_ACTION_CARDS = _maxActionCards;
+    }
+
+    function setMinActionCards(uint8 _minActionCards) public onlyOwner {
+        MIN_ACTION_CARDS = _minActionCards;
     }
 
     function createDeck() public {
@@ -190,6 +202,54 @@ contract Deck is ERC721, ERC1155Holder, Ownable {
         return decks[_deckId].actionCardTypes[_cardTypeId].count;
     }
 
+    /**
+     * @dev Returns array of action cards for a deck
+     * @param _deckId uint256 ID of the deck
+     */
+    function getActionCards(uint256 _deckId) public sendersDeck(_deckId) returns (uint256[] memory) {
+        Decks storage deck = decks[_deckId];
+        uint256[] memory actionCards = new uint256[](deck.actionCardCount);
+        for (uint256 i = 0; i < deck.actionCardTypeList.length; i++) {
+            uint256 actionCardTypeId = deck.actionCardTypeList[i];
+            for (uint256 j = 0; j < deck.actionCardTypes[actionCardTypeId].count; j++) {
+                actionCards[i + j] = actionCardTypeId;
+            }
+        }
+        return actionCards;
+    }
+
+    /**
+     * @dev Draws cards in turn
+     * @param _deckId uint256 ID of the deck
+     */
+    function drawActionCardsInTurn(uint256 _deckId) internal returns (uint256[] memory) {
+        Decks storage deck = decks[_deckId];
+        uint256 intelligence = battleCardContract.getBattleCard(deck.battleCardId).intelligence;
+        uint256[] memory totalActionCards = getActionCards(_deckId);
+        totalActionCards = _shuffle(totalActionCards);
+        uint256[] memory drewActionCards = new uint256[](intelligence);
+        for (uint256 i = 0; i < intelligence; i++) {
+            drewActionCards[i] = totalActionCards[i];
+        }
+        return drewActionCards;
+    }
+
+    // PRIVATES
+    /**
+     * @dev Shuffles a number array
+     * @param nums uint256[]
+     */
+    function _shuffle(uint256[] memory nums) private returns (uint256[] memory) {
+        for (uint256 i = 0; i < nums.length; i++) {
+            uint256 n = i + (uint256(keccak256(abi.encodePacked(block.timestamp))) % (nums.length - i));
+            uint256 temp = nums[n];
+            nums[n] = nums[i];
+            nums[i] = temp;
+        }
+        return nums;
+    }
+
+    // MODIFIERS
     modifier sendersDeck(uint256 _deckId) {
         require(msg.sender == ownerOf(_deckId));
         _;
