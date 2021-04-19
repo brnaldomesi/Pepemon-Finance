@@ -1,8 +1,8 @@
 import {deployContract, MockProvider} from 'ethereum-waffle';
-import DeckArtifact from '../../artifacts/contracts/Deck.sol/Deck.json';
+import DeckArtifact from '../../artifacts/contracts/PepemonCardDeck.sol/PepemonCardDeck.json';
 
 import {Signer} from 'ethers';
-import {Deck} from '../../typechain';
+import {PepemonCardDeck} from '../../typechain';
 
 let provider: MockProvider;
 
@@ -15,7 +15,7 @@ export function getProvider() {
 
 
 export async function deployDeckContract(signer: Signer) {
-  return (await deployContract(signer, DeckArtifact)) as Deck;
+  return (await deployContract(signer, DeckArtifact)) as PepemonCardDeck;
 }
 
 export async function mineBlock() {

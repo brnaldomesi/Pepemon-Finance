@@ -1,31 +1,68 @@
-// import { deployDeckContract, getProvider } from './helpers/contract';
-// import { CardBase, Deck, Battle } from '../typechain';
-// import PepemonArtifact from '../artifacts/contracts/Pepemon.sol/Pepemon.json';
-// import ActionCardArtifact from '../artifacts/contracts/CardBase.sol/CardBase.json';
-// import DeckArtifact from '../artifacts/contracts/Deck.sol/Deck.json';
-// import BattleArtifact from '../artifacts/contracts/Battle.sol/Battle.json';
-//
-// import { expect } from 'chai';
-// import { deployContract, deployMockContract, MockContract } from 'ethereum-waffle';
-// import { BigNumber } from 'ethers';
-//
-// const [alice, bob] = getProvider().getWallets();
-//
-// describe('Battle', () => {
-//   let battle: Battle;
-//   let deck: Deck | MockContract;
-//
-//   beforeEach(async () => {
-//     deck = await deployMockContract(alice, DeckArtifact.abi);
-//
-//     battle = (await deployContract(alice, BattleArtifact, [deck.address])) as Battle;
-//   });
-//
-//   it('Should fetch the cards of a deck', async () => {
-//     await deck.mock.decks.withArgs(1).returns({
-//       "battleCardId": 1
-//     });
-//
-//     await battle.getActionCards(1).then(console.log);
-//   });
-// });
+import { deployDeckContract, getProvider } from './helpers/contract';
+import { PepemonCard, PepemonCardDeck, PepemonBattle } from '../typechain';
+import { PepemonFactory } from "../typechain/PepemonFactory";
+
+
+import DeckArtifact from '../artifacts/contracts/PepemonCardDeck.sol/PepemonCardDeck.json';
+import CardArtifact from '../artifacts/contracts/PepemonCard.sol/PepemonCard.json';
+import BattleArtifact from '../artifacts/contracts/PepemonBattle.sol/PepemonBattle.json';
+
+import { expect } from 'chai';
+import { deployContract, deployMockContract, MockContract } from 'ethereum-waffle';
+import { BigNumber } from 'ethers';
+
+const [alice, bob] = getProvider().getWallets();
+
+describe('Battle', () => {
+  let battle: PepemonBattle;
+  let deck: PepemonCardDeck | MockContract;
+  let card: PepemonCard | MockContract;
+
+  beforeEach(async () => {
+    // deck = await deployMockContract(alice, DeckArtifact.abi);
+    deck = await deployDeckContract(alice);
+    battle = (await deployContract(alice, BattleArtifact)) as PepemonBattle;
+    card = await deployMockContract(alice, CardArtifact.abi);
+
+    // // card
+    // card.addBattleCard({
+    //   battleCardId: 1,
+    //   battleType: 1,
+    //   hp: 400,
+    //   spd: 5,
+    //   inte: 6,
+    //   def: 12,
+    //   atk: 5,
+    //   sAtk: 20,
+    //   sDef: 12
+    // });
+    // card.addBattleCard({
+    //   battleCardId: 2,
+    //   battleType: 1,
+    //   hp: 800,
+    //   spd: 10,
+    //   inte: 7,
+    //   def: 24,
+    //   atk: 10,
+    //   sAtk: 40,
+    //   sDef: 24
+    // });
+    // // deck
+    // deck.createDeck();
+    // deck.addBattleCardToDeck(1, 1);
+  });
+
+  it('Should allow a battle to be created', async () => {
+    await battle.createBattle(alice.address, bob.address);
+    await battle.battles(1).then((battle: any) => {
+      expect(battle['battleId']).to.eq(1);
+      expect(battle['p1']).to.eq(alice.address);
+      expect(battle['p2']).to.eq(bob.address);
+    });
+  });
+
+  it('Should allow a battle to be started', async () => {
+    await battle.createBattle(alice.address, bob.address);
+    // await battle.startBattle(1);
+  });
+});
