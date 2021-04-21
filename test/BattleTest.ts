@@ -1,4 +1,4 @@
-import { deployDeckContract, getProvider } from './helpers/contract';
+import { deployDeckContract, deployBattleContract, getProvider } from './helpers/contract';
 import { PepemonCard, PepemonCardDeck, PepemonBattle } from '../typechain';
 import { PepemonFactory } from "../typechain/PepemonFactory";
 
@@ -16,15 +16,17 @@ const [alice, bob] = getProvider().getWallets();
 describe('Battle', () => {
   let battle: PepemonBattle;
   let deck: PepemonCardDeck | MockContract;
-  let card: PepemonCard | MockContract;
+  // let card: PepemonCard | MockContract;
+  let card: PepemonCard;
 
   beforeEach(async () => {
     // deck = await deployMockContract(alice, DeckArtifact.abi);
     deck = await deployDeckContract(alice);
-    battle = (await deployContract(alice, BattleArtifact)) as PepemonBattle;
-    card = await deployMockContract(alice, CardArtifact.abi);
+    battle = await deployBattleContract(alice);
+    // card = await deployMockContract(alice, CardArtifact.abi);
+    card = (await deployContract(alice, CardArtifact)) as PepemonCard;
 
-    // // card
+    // card
     // card.addBattleCard({
     //   battleCardId: 1,
     //   battleType: 1,
@@ -58,6 +60,17 @@ describe('Battle', () => {
       expect(battle['battleId']).to.eq(1);
       expect(battle['p1']).to.eq(alice.address);
       expect(battle['p2']).to.eq(bob.address);
+    });
+    battle.addBattleCard({
+      battleCardId: 2,
+      battleType: 1,
+      hp: 800,
+      spd: 10,
+      inte: 7,
+      def: 24,
+      atk: 10,
+      sAtk: 40,
+      sDef: 24
     });
   });
 

@@ -1,12 +1,14 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.7.4;
+pragma solidity ^0.8.0;
 pragma experimental ABIEncoderV2;
 
-import "@openzeppelin/contracts/math/SafeMath.sol";
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "./PepemonCardDeck.sol";
+import "./PepemonCard.sol";
 
-contract PepemonBattle is PepemonCardDeck {
+contract PepemonBattle is Ownable {
     using SafeMath for uint256;
 
     enum Role {ATTACK, DEFENSE}
@@ -44,8 +46,36 @@ contract PepemonBattle is PepemonCardDeck {
     uint256 p1PlayedCardCount;
     uint256 p2PlayedCardCount;
 
-    constructor() public {
+    address cardAddress;
+    address deckAddress;
+
+    PepemonCard cardContract;
+    PepemonCardDeck deckContract;
+
+    constructor(address _cardAddress, address _deckAddress) public {
+        cardAddress = _cardAddress;
+        deckAddress = _deckAddress;
+        cardContract = PepemonCard(cardAddress);
+        deckContract = PepemonCardDeck(deckAddress);
         nextBattleId = 1;
+    }
+
+    /**
+     * @dev Set card address
+     * @param _cardAddress address
+     */
+    function setCardAddress(address _cardAddress) public {
+        cardAddress = _cardAddress;
+        cardContract = PepemonCard(cardAddress);
+    }
+
+    /**
+     * @dev Set deck address
+     * @param _deckAddress address
+     */
+    function setDeckAddress(address _deckAddress) public {
+        deckAddress = _deckAddress;
+        deckContract = PepemonCardDeck(deckAddress);
     }
 
     /**
@@ -58,14 +88,14 @@ contract PepemonBattle is PepemonCardDeck {
         battles[nextBattleId] = Battle(
             nextBattleId,
             _p1,
-            playerToDecks[_p1],
+            deckContract.playerToDecks(_p1),
             _p2,
-            playerToDecks[_p2],
+            deckContract.playerToDecks(_p2),
             address(0),
             false,
             block.timestamp
         );
-        nextBattleId.add(1);
+        nextBattleId = nextBattleId.add(1);
     }
 
     /**
@@ -74,8 +104,8 @@ contract PepemonBattle is PepemonCardDeck {
      */
     function startBattle(uint256 _battleId) public {
         Battle memory battle = battles[_battleId];
-        p1SupportCardList = getAllSupportCardsInDeck(battle.p1DeckId);
-        p2SupportCardList = getAllSupportCardsInDeck(battle.p2DeckId);
+        p1SupportCardList = deckContract.getAllSupportCardsInDeck(battle.p1DeckId);
+        p2SupportCardList = deckContract.getAllSupportCardsInDeck(battle.p2DeckId);
         p1PlayedCardCount = 0;
         p2PlayedCardCount = 0;
     }
@@ -87,21 +117,21 @@ contract PepemonBattle is PepemonCardDeck {
     function _getSupportCardsInTurn(uint256 _battleId) private {
         Battle memory battle = battles[_battleId];
 
-        uint256 p1BattleCardId = decks[battle.p1DeckId].battleCardId;
-        uint256 p1INT = battleCardStats[p1BattleCardId].inte;
+        (uint256 p1BattleCardId, ) = deckContract.decks(battle.p1DeckId);
+        (, , , , uint256 p1INT, , , , ) = cardContract.battleCardStats(p1BattleCardId);
         uint256[] memory p1SupportCards = new uint256[](p1INT);
         for (uint256 i = 0; i < p1INT; i++) {
             p1SupportCards[i] = p1SupportCardList[p1PlayedCardCount + i];
         }
-        p1PlayedCardCount.add(p1INT);
+        p1PlayedCardCount = p1PlayedCardCount.add(p1INT);
 
-        uint256 p2BattleCardId = decks[battle.p2DeckId].battleCardId;
-        uint256 p2INT = battleCardStats[p2BattleCardId].inte;
+        (uint256 p2BattleCardId, ) = deckContract.decks(battle.p2DeckId);
+        (, , , , uint256 p2INT, , , , ) = cardContract.battleCardStats(p2BattleCardId);
         uint256[] memory p2SupportCards = new uint256[](p2INT);
         for (uint256 i = 0; i < p2INT; i++) {
             p2SupportCards[i] = p2SupportCardList[p2PlayedCardCount + i];
         }
-        p2PlayedCardCount.add(p2INT);
+        p2PlayedCardCount = p2PlayedCardCount.add(p2INT);
 
         turns.push(
             Turn(

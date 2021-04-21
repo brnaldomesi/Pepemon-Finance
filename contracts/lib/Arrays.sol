@@ -1,4 +1,4 @@
-pragma solidity 0.7.4;
+pragma solidity ^0.8.0;
 
 library Arrays {
     function shuffle(uint256[] memory nums) internal view returns (uint256[] memory) {

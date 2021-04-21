@@ -1,17 +1,17 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.7.4;
+pragma solidity ^0.8.0;
 pragma experimental ABIEncoderV2;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/token/ERC1155/ERC1155Holder.sol";
+import "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/math/SafeMath.sol";
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "./PepemonFactory.sol";
 import "./PepemonCard.sol";
 import "./lib/Arrays.sol";
 
-contract PepemonCardDeck is ERC721, ERC1155Holder, Ownable, PepemonCard {
+contract PepemonCardDeck is ERC721, ERC1155Holder, Ownable {
     using SafeMath for uint256;
 
     struct Deck {
@@ -37,7 +37,7 @@ contract PepemonCardDeck is ERC721, ERC1155Holder, Ownable, PepemonCard {
     uint8 public MIN_SUPPORT_CARDS;
 
     uint256 nextDeckId;
-    // address public cardAddress;
+    address public cardAddress;
     address public battleCardAddress;
     address public supportCardAddress;
 
@@ -52,16 +52,29 @@ contract PepemonCardDeck is ERC721, ERC1155Holder, Ownable, PepemonCard {
         MIN_SUPPORT_CARDS = 40;
     }
 
+    /**
+     * @dev Override supportInterface .
+     */
+    function supportsInterface(bytes4 interfaceId)
+        public
+        virtual
+        override(ERC721, ERC1155Receiver)
+        view
+        returns (bool)
+    {
+        return super.supportsInterface(interfaceId);
+    }
+
     // MODIFIERS
     modifier sendersDeck(uint256 _deckId) {
         require(msg.sender == ownerOf(_deckId));
         _;
     }
 
-    // function setCardAddress(address _cardAddress) public onlyOwner {
-    //     cardAddress = _cardAddress;
-    //     cardContract = PepemonCard(cardAddress);
-    // }
+    function setCardAddress(address _cardAddress) public onlyOwner {
+        cardAddress = _cardAddress;
+        cardContract = PepemonCard(cardAddress);
+    }
 
     function setBattleCardAddress(address _battleCardAddress) public onlyOwner {
         battleCardAddress = _battleCardAddress;
@@ -82,7 +95,7 @@ contract PepemonCardDeck is ERC721, ERC1155Holder, Ownable, PepemonCard {
     function createDeck() public {
         _safeMint(msg.sender, nextDeckId);
         playerToDecks[msg.sender] = nextDeckId;
-        nextDeckId.add(1);
+        nextDeckId = nextDeckId.add(1);
     }
 
     function addBattleCardToDeck(uint256 _deckId, uint256 _battleCardId) public {
