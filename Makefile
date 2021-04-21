@@ -13,7 +13,7 @@ compile-clean:
 	make compile
 
 test:
-    npx hardhat test
+	npx hardhat test
 
 run-node:
 	@npx hardhat node
